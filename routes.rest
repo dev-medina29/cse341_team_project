@@ -1,0 +1,51 @@
+
+### get all user
+
+GET http://localhost:2026/users
+
+
+### get user by id
+
+GET http://localhost:2026/users/6a68d1a284332237b68d1555
+
+### Insert a user
+
+POST http://localhost:2026/users
+Content-Type: application/json
+
+{
+  "username": "liza",
+  "email": "mareinelili@gmail.com",
+  "password": "userPass65",
+  "firstName": "Liza",
+  "lastName": "MBEDI",
+  "bio": "midewife",
+  "role": "user"
+}
+
+
+### Update a user
+
+PUT  http://localhost:2026/users/6a68d1a284332237b68d1555
+Content-Type: application/json
+
+{
+  "_id": "6a68d1a284332237b68d1555",
+    "username": "maria_admin",
+    "email": "maria@example.com",
+    "password": "userPass654",
+    "firstName": "Maria",
+    "lastName": "Lopez",
+    "bio": "System administrator and project manager",
+    "role": "user"
+}
+
+### Delete a user
+DELETE http://localhost:2026/users/6a68d1a28455
+
+### get all posts
+
+GET http://localhost:2026/posts
+
+### get by ID
+GET http://localhost:2026/posts/6a68dd4a84332237b68d156a
