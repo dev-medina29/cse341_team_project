@@ -1,30 +1,41 @@
-const bodyParser = require("body-parser");
 const express = require("express");
-const port = 2026;
-const app = express();
-const path = require("path");
+const cors = require("cors");
 const mongodb = require("./data/database");
 
-app.use(bodyParser.json());
+const app = express();
+const port = process.env.PORT || 3000;
 
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin,X-Requested-With,Content-Type,Accept,Z-key",
-  );
-  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
-  next();
-});
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: [
+      "Origin",
+      "X-Requested-With",
+      "Content-Type",
+      "Accept",
+      "Z-Key",
+      "Authorization",
+    ],
+  }),
+);
+
+app.use(express.json());
 
 app.use("/", require("./routes"));
 
-mongodb.initdb((err) => {
-  if (err) {
-    console.log("There is an error connecting to the database", err);
-  } else {
-    app.listen(port, () => {
-      console.log(`The app is running at localhost:${port}`);
-    });
-  }
+process.on("uncaughtException", (err, origin) => {
+  console.error(`Caught exception: ${err}\nException origin: ${origin}`);
+  process.exit(1);
 });
+
+mongodb
+  .initDb()
+  .then(() => {
+    app.listen(port, () => {
+      console.log(`Database initialized and server running on port ${port}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Failed to initialize database:", err);
+  });

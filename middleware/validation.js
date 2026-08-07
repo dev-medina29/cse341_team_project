@@ -1,15 +1,12 @@
 const Joi = require("joi");
 
-// User schema middleware
 const validateUser = (req, res, next) => {
   const schema = Joi.object({
     username: Joi.string().min(3).max(30).required(),
     email: Joi.string().email().required(),
-    password: Joi.string().min(6).required(),
-    firstName: Joi.string().min(2).max(50).required(),
-    lastName: Joi.string().min(2).max(50).required(),
-    bio: Joi.string().max(200).optional(),
-    role: Joi.string().valid("user", "admin").required(),
+    displayName: Joi.string().min(2).max(50).allow("", null).optional(),
+    bio: Joi.string().max(250).allow("", null).optional(),
+    avatarUrl: Joi.string().uri().allow("", null).optional(),
   });
 
   const { error } = schema.validate(req.body);
@@ -19,21 +16,14 @@ const validateUser = (req, res, next) => {
   next();
 };
 
-// Post schema middleware
 const validatePost = (req, res, next) => {
   const schema = Joi.object({
-    title: Joi.string().min(3).max(100).required(),
+    title: Joi.string().min(3).max(150).required(),
     content: Joi.string().min(10).required(),
-    authorId: Joi.string().required(), // ObjectId as string
-    likes: Joi.number().integer().min(0).default(0),
-    comments: Joi.array()
-      .items(
-        Joi.object({
-          userId: Joi.string().required(),
-          commentText: Joi.string().min(1).max(200).required(),
-        }),
-      )
-      .default([]),
+    authorId: Joi.string().allow("", null).optional(),
+    categoryId: Joi.string().allow("", null).optional(),
+    tags: Joi.array().items(Joi.string()).optional(),
+    likesCount: Joi.number().integer().min(0).optional(),
   });
 
   const { error } = schema.validate(req.body);
