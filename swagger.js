@@ -26,6 +26,16 @@ schemes: process.env.NODE_ENV === "production" ? ["https"] : ["http"],
       tags: ["nodejs", "express", "backend"],
       likesCount: 12,
     },
+    Category: {
+      name: "Web Development",
+      description: "Articles related to backend and frontend web technologies.",
+      slug: "web-development",
+    },
+    Comment: {
+      postId: "66b3a1f1e2b0a1c2d3e4f5b1",
+      authorId: "66b3a1f1e2b0a1c2d3e4f5a1",
+      content: "Great article on REST API standards!",
+    },
   },
 };
 
