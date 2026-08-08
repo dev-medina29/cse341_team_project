@@ -5,8 +5,10 @@ const doc = {
     title: "DevPulse Social Blogging API",
     description: "API Documentation for DevPulse Platform",
   },
-  host: "localhost:3000", 
-  schemes: ["http", "https"],
+  host: process.env.NODE_ENV === "production"
+  ? "cse341-team-project-m1rm.onrender.com"
+  : "localhost:3000",
+schemes: process.env.NODE_ENV === "production" ? ["https"] : ["http"],
   definitions: {
     User: {
       username: "alex_dev",

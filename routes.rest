@@ -1,16 +1,16 @@
 
 ### get all user
 
-GET http://localhost:2026/users
+GET http://localhost:3000/users
 
 
 ### get user by id
 
-GET http://localhost:2026/users/6a68d1a284332237b68d1555
+GET http://localhost:3000/users/6a68d1a284332237b68d1555
 
 ### Insert a user
 
-POST http://localhost:2026/users
+POST http://localhost:3000/users
 Content-Type: application/json
 
 {
@@ -26,7 +26,7 @@ Content-Type: application/json
 
 ### Update a user
 
-PUT  http://localhost:2026/users/6a68d1a284332237b68d1555
+PUT  http://localhost:3000/users/6a68d1a284332237b68d1555
 Content-Type: application/json
 
 {
@@ -41,11 +41,11 @@ Content-Type: application/json
 }
 
 ### Delete a user
-DELETE http://localhost:2026/users/6a68d1a28455
+DELETE http://localhost:3000/users/6a68d1a28455
 
 ### get all posts
 
-GET http://localhost:2026/posts
+GET http://localhost:3000/posts
 
 ### get by ID
-GET http://localhost:2026/posts/6a68dd4a84332237b68d156a
+GET http://localhost:3000/posts/6a68dd4a84332237b68d156a
