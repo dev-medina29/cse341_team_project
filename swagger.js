@@ -5,7 +5,7 @@ const doc = {
     title: "DevPulse Social Blogging API",
     description: "API Documentation for DevPulse Platform",
   },
-  host: "localhost:3000", 
+  host: "localhost:3000",
   schemes: ["http", "https"],
   definitions: {
     User: {
@@ -23,6 +23,16 @@ const doc = {
       categoryId: "66b3a1f1e2b0a1c2d3e4f5c1",
       tags: ["nodejs", "express", "backend"],
       likesCount: 12,
+    },
+    Category: {
+      name: "Web Development",
+      description: "Articles related to backend and frontend web technologies.",
+      slug: "web-development",
+    },
+    Comment: {
+      postId: "66b3a1f1e2b0a1c2d3e4f5b1",
+      authorId: "66b3a1f1e2b0a1c2d3e4f5a1",
+      content: "Great article on REST API standards!",
     },
   },
 };

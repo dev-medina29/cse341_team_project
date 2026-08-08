@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const mongodb = require("./data/database");
+const session = require("express-session");
+const passport = require("./config/passport");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -21,6 +23,16 @@ app.use(
 );
 
 app.use(express.json());
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "devpulse_secret_key",
+    resave: false,
+    saveUninitialized: false,
+  }),
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/", require("./routes"));
 

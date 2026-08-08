@@ -33,4 +33,34 @@ const validatePost = (req, res, next) => {
   next();
 };
 
-module.exports = { validateUser, validatePost };
+const validateCategory = (req, res, next) => {
+  const schema = Joi.object({
+    name: Joi.string().min(2).max(50).required(),
+    description: Joi.string().max(250).allow("", null).optional(),
+    slug: Joi.string()
+      .pattern(/^[a-z0-9-]+$/)
+      .required(),
+  });
+
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+  next();
+};
+
+const validateComment = (req, res, next) => {
+  const schema = Joi.object({
+    postId: Joi.string().length(24).hex().required(),
+    authorId: Joi.string().length(24).hex().allow("", null).optional(),
+    content: Joi.string().min(1).max(500).required(),
+  });
+
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ error: error.details[0].message });
+  }
+  next();
+};
+
+module.exports = { validateUser, validatePost, validateCategory, validateComment };
