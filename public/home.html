@@ -67,6 +67,36 @@
         ul li:hover {
             background: #d0d7de;
         }
+
+        #auth-bar {
+            max-width: 800px;
+            margin: 20px auto 0;
+            padding: 14px 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #auth-status {
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        #auth-link {
+            background: #2c3e50;
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        #auth-link:hover {
+            background: #1a252f;
+        }
     </style>
 </head>
 
@@ -74,6 +104,11 @@
     <header>
         <h1>DEVPULSE BLOG API</h1>
     </header>
+
+    <div id="auth-bar">
+        <span id="auth-status">Checking login status...</span>
+        <a id="auth-link" href="/auth/google">Login with Google</a>
+    </div>
 
     <div class="container">
         <div class="card">
@@ -106,6 +141,30 @@
             </ul>
         </div>
     </div>
+
+    <script>
+        async function checkAuthStatus() {
+            const statusEl = document.getElementById('auth-status');
+            const linkEl = document.getElementById('auth-link');
+            try {
+                const res = await fetch('/auth/status');
+                const data = await res.json();
+                if (data.authenticated) {
+                    const name = (data.user && (data.user.displayName || data.user.name)) || 'User';
+                    statusEl.textContent = `Logged in as ${name}`;
+                    linkEl.textContent = 'Logout';
+                    linkEl.href = '/auth/logout';
+                } else {
+                    statusEl.textContent = 'Logged Out';
+                    linkEl.textContent = 'Login with Google';
+                    linkEl.href = '/auth/google';
+                }
+            } catch (err) {
+                statusEl.textContent = 'Logged Out';
+            }
+        }
+        checkAuthStatus();
+    </script>
 </body>
 
 </html>
