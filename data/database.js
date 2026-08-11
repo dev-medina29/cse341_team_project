@@ -15,11 +15,9 @@ const initDb = async () => {
   }
   try {
     await client.connect();
-    if (!process.env.MONGODB_DB_NAME) {
-      throw new Error(
-        "The MONGODB_DB_NAME variable is not set in the .env file!",
-      );
-    }
+    // Same as devpulse: no separate db-name variable required.
+    // If MONGODB_DB_NAME is set, use it; otherwise fall back to the
+    // database name already embedded in MONGODB_URI.
     database = client.db(process.env.MONGODB_DB_NAME);
     console.log("Database initialized successfully!");
     return database;
