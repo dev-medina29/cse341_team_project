@@ -34,6 +34,18 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Google calls this route back after the user approves/denies access.
+// The user's profile gets stored manually on the session here, the same
+// way it is in devpulse - isAuthenticated() then checks req.session.user.
+app.get(
+  "/google/callback",
+  passport.authenticate("google", { failureRedirect: "/api-docs", session: false }),
+  (req, res) => {
+    req.session.user = req.user;
+    res.redirect("/");
+  },
+);
+
 app.use("/", require("./routes"));
 
 process.on("uncaughtException", (err, origin) => {
