@@ -1,51 +1,260 @@
+### ============================================================
+### DevPulse / CSE 341 Team Project — REST Client test file
+### Works with the VS Code "REST Client" extension.
+###
+### HOW TO SWITCH BETWEEN LOCAL AND RENDER:
+### Comment out one @baseUrl line and uncomment the other, then
+### save the file — every request below uses {{baseUrl}}.
+### ============================================================
 
-### get all user
+@baseUrl = http://localhost:3000
+# @baseUrl = https://cse341-team-project-m1rm.onrender.com
 
-GET http://localhost:3000/users
+### ============================================================
+### AUTH
+### Google OAuth can't be driven directly from a .rest file (it
+### needs a real browser to complete the Google login screen), so:
+###   1. Open {{baseUrl}}/login in your browser and log in with Google.
+###   2. Open dev tools > Application/Storage > Cookies, copy the
+###      value of the "connect.sid" cookie.
+###   3. Paste it into @sessionCookie below.
+### Every protected POST/PUT/DELETE request further down sends that
+### cookie so it runs authenticated, just like your browser session.
+### ============================================================
+
+@sessionCookie = connect.sid=PASTE_YOUR_COOKIE_VALUE_HERE
+
+### Check current login status (should flip to authenticated:true
+### once @sessionCookie is set correctly)
+GET {{baseUrl}}/auth/status
+
+### Start the Google login flow (open this URL in a browser, not here)
+# GET {{baseUrl}}/login
+
+### Log out (clears the session on the server)
+GET {{baseUrl}}/logout
 
 
-### get user by id
+### ============================================================
+### USERS
+### Joi schema: username (3-30, required), email (required),
+### displayName (2-50, optional), bio (<=250, optional),
+### avatarUrl (uri, optional)
+### ============================================================
 
-GET http://localhost:3000/users/6a68d1a284332237b68d1555
+### Get all users
+GET {{baseUrl}}/users
 
-### Insert a user
+### Get a single user by ID (replace with a real _id from the GET above)
+GET {{baseUrl}}/users/PASTE_USER_ID_HERE
 
-POST http://localhost:3000/users
+### Create a user (protected)
+POST {{baseUrl}}/users
+Content-Type: application/json
+Cookie: {{sessionCookie}}
+
+{
+  "username": "morgan_writes",
+  "email": "morgan.writes@example.com",
+  "displayName": "Morgan Lee",
+  "bio": "Technical writer documenting APIs and dev tools.",
+  "avatarUrl": "https://images.unsplash.com/photo-1502685104226-ee32379fefbe"
+}
+
+### Create a user — missing required field (expect 400)
+POST {{baseUrl}}/users
+Content-Type: application/json
+Cookie: {{sessionCookie}}
+
+{
+  "displayName": "No Username Or Email"
+}
+
+### Update a user (protected)
+PUT {{baseUrl}}/users/PASTE_USER_ID_HERE
+Content-Type: application/json
+Cookie: {{sessionCookie}}
+
+{
+  "username": "morgan_writes",
+  "email": "morgan.writes@example.com",
+  "displayName": "Morgan Lee-Fischer",
+  "bio": "Technical writer and API documentation lead.",
+  "avatarUrl": "https://images.unsplash.com/photo-1502685104226-ee32379fefbe"
+}
+
+### Delete a user (protected)
+DELETE {{baseUrl}}/users/PASTE_USER_ID_HERE
+Cookie: {{sessionCookie}}
+
+### Attempt to create a user WITHOUT auth (expect 401)
+POST {{baseUrl}}/users
 Content-Type: application/json
 
 {
-  "username": "liza",
-  "email": "mareinelili@gmail.com",
-  "password": "userPass65",
-  "firstName": "Liza",
-  "lastName": "MBEDI",
-  "bio": "midewife",
-  "role": "user"
+  "username": "no_auth_user",
+  "email": "no.auth@example.com"
 }
 
 
-### Update a user
+### ============================================================
+### CATEGORIES
+### Joi schema: name (2-50, required), description (<=250, optional),
+### slug (lowercase letters/numbers/hyphens only, required)
+### ============================================================
 
-PUT  http://localhost:3000/users/6a68d1a284332237b68d1555
+### Get all categories
+GET {{baseUrl}}/categories
+
+### Get a single category by ID
+GET {{baseUrl}}/categories/PASTE_CATEGORY_ID_HERE
+
+### Create a category (protected)
+POST {{baseUrl}}/categories
 Content-Type: application/json
+Cookie: {{sessionCookie}}
 
 {
-  "_id": "6a68d1a284332237b68d1555",
-    "username": "maria_admin",
-    "email": "maria@example.com",
-    "password": "userPass654",
-    "firstName": "Maria",
-    "lastName": "Lopez",
-    "bio": "System administrator and project manager",
-    "role": "user"
+  "name": "Testing",
+  "description": "Unit testing, integration testing, and QA practices.",
+  "slug": "testing"
 }
 
-### Delete a user
-DELETE http://localhost:3000/users/6a68d1a28455
+### Create a category — invalid slug format (expect 400)
+POST {{baseUrl}}/categories
+Content-Type: application/json
+Cookie: {{sessionCookie}}
 
-### get all posts
+{
+  "name": "Bad Slug Example",
+  "description": "Slug has spaces and capitals, which should fail validation.",
+  "slug": "Not A Valid Slug!"
+}
 
-GET http://localhost:3000/posts
+### Update a category (protected)
+PUT {{baseUrl}}/categories/PASTE_CATEGORY_ID_HERE
+Content-Type: application/json
+Cookie: {{sessionCookie}}
 
-### get by ID
-GET http://localhost:3000/posts/6a68dd4a84332237b68d156a
+{
+  "name": "Testing & QA",
+  "description": "Unit testing, integration testing, and quality assurance practices.",
+  "slug": "testing-qa"
+}
+
+### Delete a category (protected)
+DELETE {{baseUrl}}/categories/PASTE_CATEGORY_ID_HERE
+Cookie: {{sessionCookie}}
+
+
+### ============================================================
+### POSTS
+### Joi schema: title (3-150, required), content (min 10, required),
+### authorId (optional), categoryId (optional),
+### tags (array of strings, optional), likesCount (int >=0, optional)
+### ============================================================
+
+### Get all posts
+GET {{baseUrl}}/posts
+
+### Get a single post by ID
+GET {{baseUrl}}/posts/PASTE_POST_ID_HERE
+
+### Create a post (protected)
+POST {{baseUrl}}/posts
+Content-Type: application/json
+Cookie: {{sessionCookie}}
+
+{
+  "title": "Writing Effective Integration Tests for Express APIs",
+  "content": "Integration tests catch bugs that unit tests miss by exercising real routes, middleware, and error handling together.",
+  "authorId": "PASTE_USER_ID_HERE",
+  "categoryId": "PASTE_CATEGORY_ID_HERE",
+  "tags": ["testing", "express", "supertest"],
+  "likesCount": 0
+}
+
+### Create a post — content too short (expect 400)
+POST {{baseUrl}}/posts
+Content-Type: application/json
+Cookie: {{sessionCookie}}
+
+{
+  "title": "Too Short",
+  "content": "short"
+}
+
+### Update a post (protected)
+PUT {{baseUrl}}/posts/PASTE_POST_ID_HERE
+Content-Type: application/json
+Cookie: {{sessionCookie}}
+
+{
+  "title": "Writing Effective Integration Tests for Express APIs (Updated)",
+  "content": "Integration tests catch bugs that unit tests miss by exercising real routes, middleware, and error handling together end to end.",
+  "authorId": "PASTE_USER_ID_HERE",
+  "categoryId": "PASTE_CATEGORY_ID_HERE",
+  "tags": ["testing", "express", "supertest", "jest"],
+  "likesCount": 3
+}
+
+### Delete a post (protected)
+DELETE {{baseUrl}}/posts/PASTE_POST_ID_HERE
+Cookie: {{sessionCookie}}
+
+
+### ============================================================
+### COMMENTS
+### Joi schema: postId (24-char hex, required),
+### authorId (24-char hex, optional), content (1-500, required)
+### ============================================================
+
+### Get all comments
+GET {{baseUrl}}/comments
+
+### Get a single comment by ID
+GET {{baseUrl}}/comments/PASTE_COMMENT_ID_HERE
+
+### Create a comment (protected)
+POST {{baseUrl}}/comments
+Content-Type: application/json
+Cookie: {{sessionCookie}}
+
+{
+  "postId": "PASTE_POST_ID_HERE",
+  "authorId": "PASTE_USER_ID_HERE",
+  "content": "This was exactly what I needed for my current project, thanks!"
+}
+
+### Create a comment — postId not a valid ObjectId (expect 400)
+POST {{baseUrl}}/comments
+Content-Type: application/json
+Cookie: {{sessionCookie}}
+
+{
+  "postId": "not-a-valid-id",
+  "content": "This should fail validation."
+}
+
+### Update a comment (protected)
+PUT {{baseUrl}}/comments/PASTE_COMMENT_ID_HERE
+Content-Type: application/json
+Cookie: {{sessionCookie}}
+
+{
+  "postId": "PASTE_POST_ID_HERE",
+  "authorId": "PASTE_USER_ID_HERE",
+  "content": "Updated: this was exactly what I needed, thanks again!"
+}
+
+### Delete a comment (protected)
+DELETE {{baseUrl}}/comments/PASTE_COMMENT_ID_HERE
+Cookie: {{sessionCookie}}
+
+
+### ============================================================
+### API DOCS
+### ============================================================
+
+### View the Swagger UI (open this URL in a browser, not here)
+# GET {{baseUrl}}/api-docs
