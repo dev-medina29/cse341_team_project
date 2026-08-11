@@ -107,7 +107,7 @@
 
     <div id="auth-bar">
         <span id="auth-status">Checking login status...</span>
-        <a id="auth-link" href="/auth/google">Login with Google</a>
+        <a id="auth-link" href="/login">Login with Google</a>
     </div>
 
     <div class="container">
@@ -153,11 +153,11 @@
                     const name = (data.user && (data.user.displayName || data.user.name)) || 'User';
                     statusEl.textContent = `Logged in as ${name}`;
                     linkEl.textContent = 'Logout';
-                    linkEl.href = '/auth/logout';
+                    linkEl.href = '/logout';
                 } else {
                     statusEl.textContent = 'Logged Out';
                     linkEl.textContent = 'Login with Google';
-                    linkEl.href = '/auth/google';
+                    linkEl.href = '/login';
                 }
             } catch (err) {
                 statusEl.textContent = 'Logged Out';

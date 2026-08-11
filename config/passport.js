@@ -6,7 +6,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID || "mock-client-id",
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "mock-client-secret",
-      callbackURL: process.env.CALLBACK_URL || "/auth/google/callback",
+      callbackURL: process.env.CALLBACK_URL || "/google/callback",
     },
     (accessToken, refreshToken, profile, done) => {
       return done(null, profile);
