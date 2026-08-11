@@ -6,7 +6,7 @@ const doc = {
     description: "API Documentation for DevPulse Platform",
   },
   host: process.env.NODE_ENV === "production"
-  ? "cse341-team-project-m1rm.onrender.com"
+    ? "cse341-team-project-r0y2.onrender.com"
   : "localhost:3000",
 schemes: process.env.NODE_ENV === "production" ? ["https"] : ["http"],
   definitions: {
