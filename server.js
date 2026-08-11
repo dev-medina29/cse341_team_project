@@ -35,13 +35,13 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Google calls this route back after the user approves/denies access.
-// The user's profile gets stored manually on the session here, the same
-// way it is in devpulse - isAuthenticated() then checks req.session.user.
+// passport.authenticate (without session: false) calls req.login() for us,
+// which runs serializeUser and writes req.session.passport.user. That's
+// what req.isAuthenticated() checks on every later request.
 app.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/api-docs", session: false }),
+  passport.authenticate("google", { failureRedirect: "/api-docs" }),
   (req, res) => {
-    req.session.user = req.user;
     res.redirect("/");
   },
 );

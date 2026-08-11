@@ -10,19 +10,12 @@ router.use("/posts", require("./posts"));
 router.use("/categories", require("./categories"));
 router.use("/comments", require("./comments"));
 
-// Top-level login/logout/callback URLs, matching the standalone
-// DevPulse project structure.
+// Top-level login/logout URLs, matching the standalone DevPulse project
+// structure. The /google/callback route itself lives in server.js, right
+// next to where session/passport middleware is configured.
 router.get(
   "/login",
   passport.authenticate("google", { scope: ["profile", "email"] }),
-);
-
-router.get(
-  "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
-  (req, res) => {
-    res.redirect("/");
-  },
 );
 
 router.get("/logout", (req, res, next) => {
