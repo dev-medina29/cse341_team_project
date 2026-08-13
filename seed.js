@@ -4,10 +4,6 @@
  * Populates the database with sample documents for all four collections:
  * users, categories, posts, and comments.
  *
- * Every document across all four collections now has 10 fields,
- * satisfying the "at least one collection has 7+ fields" requirement
- * with room to spare.
- *
  * Usage:
  *   node seed.js
  *
@@ -34,7 +30,7 @@ const seed = async () => {
         await commentsCollection.deleteMany({});
         console.log("Cleared existing users, categories, posts, and comments.");
 
-        // ----- Users (10 fields each) -----
+        // ----- Users -----
         const users = [
             {
                 username: "alex_dev",
@@ -42,10 +38,6 @@ const seed = async () => {
                 displayName: "Alex Morgan",
                 bio: "Full-stack developer passionate about Node.js and REST APIs.",
                 avatarUrl: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde",
-                location: "Austin, TX",
-                website: "https://alexmorgan.dev",
-                role: "admin",
-                isActive: true,
                 createdAt: new Date(),
             },
             {
@@ -54,10 +46,6 @@ const seed = async () => {
                 displayName: "Jamie Rivera",
                 bio: "Frontend engineer who loves clean UI and accessible design.",
                 avatarUrl: "https://images.unsplash.com/photo-1494790108377-be9c29b29330",
-                location: "Denver, CO",
-                website: "https://jamierivera.design",
-                role: "member",
-                isActive: true,
                 createdAt: new Date(),
             },
             {
@@ -66,10 +54,6 @@ const seed = async () => {
                 displayName: "Sam Okafor",
                 bio: "DevOps enthusiast, coffee addict, occasional blogger.",
                 avatarUrl: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e",
-                location: "Lagos, Nigeria",
-                website: "https://sambuilds.io",
-                role: "member",
-                isActive: false,
                 createdAt: new Date(),
             },
         ];
@@ -77,50 +61,29 @@ const seed = async () => {
         const userIds = Object.values(usersResult.insertedIds);
         console.log(`Inserted ${userIds.length} users.`);
 
-        // ----- Categories (10 fields each) -----
+        // ----- Categories -----
         const categories = [
             {
                 name: "Web Development",
                 description: "Articles related to backend and frontend web technologies.",
                 slug: "web-development",
-                color: "#3B82F6",
-                icon: "code",
-                postCount: 1,
-                isActive: true,
-                parentCategory: null,
-                createdAt: new Date(),
-                updatedAt: new Date(),
             },
             {
                 name: "DevOps",
                 description: "Deployment, CI/CD, containers, and infrastructure topics.",
                 slug: "devops",
-                color: "#10B981",
-                icon: "server",
-                postCount: 1,
-                isActive: true,
-                parentCategory: null,
-                createdAt: new Date(),
-                updatedAt: new Date(),
             },
             {
                 name: "Career",
                 description: "Advice and stories about growing a software career.",
                 slug: "career",
-                color: "#F59E0B",
-                icon: "briefcase",
-                postCount: 1,
-                isActive: true,
-                parentCategory: null,
-                createdAt: new Date(),
-                updatedAt: new Date(),
             },
         ];
         const categoriesResult = await categoriesCollection.insertMany(categories);
         const categoryIds = Object.values(categoriesResult.insertedIds);
         console.log(`Inserted ${categoryIds.length} categories.`);
 
-        // ----- Posts (10 fields each) -----
+        // ----- Posts -----
         const posts = [
             {
                 title: "Building Scalable RESTful APIs with Node.js and Express",
@@ -130,8 +93,6 @@ const seed = async () => {
                 categoryId: categoryIds[0].toString(),
                 tags: ["nodejs", "express", "backend"],
                 likesCount: 12,
-                viewsCount: 340,
-                status: "published",
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
@@ -143,8 +104,6 @@ const seed = async () => {
                 categoryId: categoryIds[1].toString(),
                 tags: ["devops", "ci-cd", "github-actions"],
                 likesCount: 8,
-                viewsCount: 210,
-                status: "published",
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
@@ -156,8 +115,6 @@ const seed = async () => {
                 categoryId: categoryIds[2].toString(),
                 tags: ["career", "junior-dev", "advice"],
                 likesCount: 21,
-                viewsCount: 512,
-                status: "published",
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
@@ -166,16 +123,12 @@ const seed = async () => {
         const postIds = Object.values(postsResult.insertedIds);
         console.log(`Inserted ${postIds.length} posts.`);
 
-        // ----- Comments (10 fields each) -----
+        // ----- Comments -----
         const comments = [
             {
                 postId: new ObjectId(postIds[0]),
                 authorId: userIds[1].toString(),
                 content: "Great article on REST API standards!",
-                likesCount: 3,
-                isEdited: false,
-                parentCommentId: null,
-                status: "visible",
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
@@ -183,10 +136,6 @@ const seed = async () => {
                 postId: new ObjectId(postIds[0]),
                 authorId: userIds[2].toString(),
                 content: "The middleware section really helped me understand error handling.",
-                likesCount: 5,
-                isEdited: false,
-                parentCommentId: null,
-                status: "visible",
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
@@ -194,10 +143,6 @@ const seed = async () => {
                 postId: new ObjectId(postIds[1]),
                 authorId: userIds[0].toString(),
                 content: "I switched from Jenkins to GitHub Actions after reading this.",
-                likesCount: 2,
-                isEdited: true,
-                parentCommentId: null,
-                status: "visible",
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
@@ -205,10 +150,6 @@ const seed = async () => {
                 postId: new ObjectId(postIds[2]),
                 authorId: userIds[2].toString(),
                 content: "Number 3 hit close to home. Thanks for sharing!",
-                likesCount: 7,
-                isEdited: false,
-                parentCommentId: null,
-                status: "visible",
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
@@ -216,7 +157,7 @@ const seed = async () => {
         const commentsResult = await commentsCollection.insertMany(comments);
         console.log(`Inserted ${Object.keys(commentsResult.insertedIds).length} comments.`);
 
-        console.log("Seeding complete. Each document across all four collections has 10 fields.");
+        console.log("Seeding complete.");
     } catch (err) {
         console.error("Error while seeding database:", err);
     } finally {
